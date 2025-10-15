@@ -20,5 +20,3 @@ jobs:
         run: npm test
       - name: deploy
         run: echo " Code is being deployed"
-  job_2:
-    runs-on: ubuntu-latest
