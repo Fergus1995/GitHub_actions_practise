@@ -1,11 +1,11 @@
-name: website_project_test
+name: website_deployment_workflow
 on:
   workflow_dispatch:
   push:
     branches:
       - main
 jobs:
-  job_1:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: checkout website code
@@ -20,3 +20,17 @@ jobs:
         run: npm test
       - name: deploy
         run: echo " Code is being deployed"
+  deploy:
+    runs-on: ubuntu-latest # setting up the runner
+    needs: [test]
+    steps:
+      - name: checkout website code
+        uses: actions/checkout@v5
+      - name: setup nodjs
+        uses: actions/setup-node@v6
+        with:
+          Node-version: 18
+      - name: install dependencies
+        run: npm ci
+      - name: build project
+        run: npm build
