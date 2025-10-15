@@ -1,0 +1,24 @@
+name: website_project_test
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  job_1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout website code
+        uses: actions/checkout@v5
+      - name: setup nodjs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+      - name: install dependencies
+        run: npm ci # in dbt this would br dbt deps
+      - name: run tests
+        run: npm test
+      - name: deploy
+        run: echo " Code is being deployed"
+  job_2:
+    runs-on: ubuntu-latest
