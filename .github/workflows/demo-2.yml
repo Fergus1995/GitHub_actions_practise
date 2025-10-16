@@ -3,7 +3,7 @@ on:
     push:
         branches:
             - main
-env: 
+env:
     DBT_USERNAME: FDIPLOCK
 #     DBT_PASSWORD:  FGDGFGNHFNH
 #     DBT_ACCOUNT:  FGFGFGFG
@@ -11,7 +11,7 @@ env:
 jobs:
     test:
         runs-on: ubuntu-latest
-        # can specify these enviroment varibles here specifc to the job itself. 
+        # can specify these enviroment varibles here specifc to the job itself.
         steps:
             - name: Get code
               uses: actions/checkout@v3
@@ -69,4 +69,4 @@ jobs:
             - name: Deploy
               run: echo "Deploying..."
             - name: print enviroment varible
-              run: echo "enviroment varible is: ${{ env.DBT_USERNAME }}"
+              run: echo "enviroment varible is ${{ env.DBT_USERNAME }}"
