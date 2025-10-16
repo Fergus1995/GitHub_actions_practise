@@ -9,6 +9,11 @@ jobs:
         steps:
             - name: Get code
               uses: actions/checkout@v3
+            - name: cache dependencies
+              uses: actions/cache@v3 # caching all the dependencies so it can be used later.
+              with:
+                  path: ~/.npm
+                  key: deps-node-modules-${{ hashFiles('**/package-lock.json')}}
             - name: Install dependencies
               run: npm ci
             - name: Test code
@@ -16,15 +21,25 @@ jobs:
     build:
         needs: test
         runs-on: ubuntu-latest
+        outputs:
+            script-file: "${{ steps.published.output-file }}" # defines the output to be past to the other job.
         steps:
             - name: Get code
               uses: actions/checkout@v3
+            - name: cache dependencies
+              uses: actions/cache@v3 # caching all the dependencies so it can be used later.
+              with:
+                  path: ~/.npm
+                  key: deps-node-modules-${{ hashFiles('**/package-lock.json')}}
             - name: Install dependencies
               run: npm ci
             - name: Build website
               run: npm run build
-            - name: store artifcats
-              uses: actions/upload-artifact@v4
+            - name: publish js filename
+              id: published
+              run: find dist/assets/*.js -type f -execdir echo 'output-file={}' >>$GITHUB_OUTPUT ';' # sets the output to a file - 'output-file={}' >>$GITHUB_OUTPUT
+            - name: store artifacts
+              uses: actions/upload-artifact@v4 # allows us to pass a artifact to the next job (as files created arent added to github between jobs (unless you setup cmd comands to do it))
               with:
                   name: dist-files
                   path: dist
@@ -40,6 +55,8 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: dist-files
+            - name: Output filename
+              run: echo "${{ needs.build.outputs.script-file }}"
             - name: output contents
               run: ls
             - name: Deploy
