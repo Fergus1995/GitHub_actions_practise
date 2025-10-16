@@ -3,9 +3,15 @@ on:
     push:
         branches:
             - main
+env: 
+    DBT_USERNAME: FDIPLOCK
+#     DBT_PASSWORD:  FGDGFGNHFNH
+#     DBT_ACCOUNT:  FGFGFGFG
+#     DBT_DATABASE: ANALYTICS    # use need to call the syntax for the shell script you are using.
 jobs:
     test:
         runs-on: ubuntu-latest
+        # can specify these enviroment varibles here specifc to the job itself. 
         steps:
             - name: Get code
               uses: actions/checkout@v3
@@ -47,6 +53,7 @@ jobs:
                   # path: |
                   #     dist
                   #     package.json
+
     deploy:
         needs: build
         runs-on: ubuntu-latest
@@ -61,3 +68,5 @@ jobs:
               run: ls
             - name: Deploy
               run: echo "Deploying..."
+            - name: print enviroment varible
+              run: echo "enviroment varible is: ${{ env.DBT_USERNAME }}"
